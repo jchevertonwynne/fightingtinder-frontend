@@ -1,26 +1,54 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
+import Location from './Location';
+import LoginForm from './Login';
+import SearchUsers from './SearchUsers';
+import Unswiped from './Unswiped';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+type AppState = {
+    username: string,
 }
 
-export default App;
+export default class App extends Component<{}, AppState> {
+    constructor(props: {}) {
+        super(props)
+        this.state = {
+            username: '',
+        }
+    }
+
+    componentDidMount = () => {
+        this.checkStatus()
+    }
+
+    checkStatus = async () => {
+        try {
+            let res = await fetch("/api/user/manage/li")
+            if (res.status === 200) {
+                this.setState({username: await res.text()})
+            } else {
+                console.log(await res.text())
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    logout = async () => {
+        try {
+            await fetch("/api/user/logout")
+            this.setState({username: ''})
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    render = () => {
+        return (
+            <>
+                { this.state.username && <p>{this.state.username}</p>}
+                { this.state.username && <><button onClick={this.logout}>Logout</button><br/><SearchUsers/><br/><Location/><Unswiped/></>}
+                { !this.state.username && <LoginForm update={this.checkStatus}/>}
+            </>
+        )
+    }
+}
