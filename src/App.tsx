@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import Location from './Location';
+import LoggedIn from './LoggedIn';
 import LoginForm from './Login';
-import SearchUsers from './SearchUsers';
-import Unswiped from './Unswiped';
 
 type AppState = {
     username: string,
@@ -45,8 +43,7 @@ export default class App extends Component<{}, AppState> {
     render = () => {
         return (
             <>
-                { this.state.username && <p>{this.state.username}</p>}
-                { this.state.username && <><button onClick={this.logout}>Logout</button><br/><SearchUsers/><br/><Location/><Unswiped/></>}
+                { this.state.username && <LoggedIn username={this.state.username} logOut={this.logout}/>}
                 { !this.state.username && <LoginForm update={this.checkStatus}/>}
             </>
         )

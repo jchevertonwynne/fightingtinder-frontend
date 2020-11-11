@@ -31,18 +31,18 @@ export default class Unswiped extends Component<{}, UnswipedState> {
         }
     }
 
-    unswipedUserCard = (user: User, i: number) => {
+    unswipedUserCard = (user: User) => {
         return (
-            <div key={i}>
-                <p>{i + 1}: {user.username}</p>
+            <>
+                <p>{user.username}</p>
                 <p>{user.latitude} {user.longitude}</p>
-                <button onClick={() => this.registerSwipe(user.username, i, false)}>would not fight</button>
-                <button onClick={() => this.registerSwipe(user.username, i, true)}>would fight</button>
-            </div>
+                <button onClick={() => this.registerSwipe(user.username, false)}>would not fight</button>
+                <button onClick={() => this.registerSwipe(user.username, true)}>would fight</button>
+            </>
         )
     }
 
-    registerSwipe = async (swiped: string, i: number, status: boolean) => {
+    registerSwipe = async (swiped: string, status: boolean) => {
         try {
             let res = await fetch('/api/swipe', {
                 method: "POST",
@@ -52,9 +52,7 @@ export default class Unswiped extends Component<{}, UnswipedState> {
                     body: JSON.stringify({swiped, status})
             })
             if (res.status === 200) {
-                let before = this.state.users.slice(0, i)
-                let after = this.state.users.slice(i + 1)
-                let users = before.concat(after)
+                let users = this.state.users.slice(1)
                 this.setState({users})
             } else {
                 console.log(await res.text())
@@ -67,7 +65,7 @@ export default class Unswiped extends Component<{}, UnswipedState> {
     render = () => {
         return (
             <>
-                {this.state.users.map((user, i) => this.unswipedUserCard(user, i))}
+                {this.state.users.length > 0 && this.unswipedUserCard(this.state.users[0])}
             </>
         )
     }

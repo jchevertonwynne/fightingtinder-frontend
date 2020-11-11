@@ -27,7 +27,7 @@ export default class SearchUsers extends Component<{}, SearchUsersState> {
         this.setState({count: this.state.count - 1})
         if (this.state.count === 0) {
             try {
-                let res = await fetch('/api/user/u/' +  this.state.toSearch)
+                let res = await fetch(`/api/user/u/${this.state.toSearch}`)
                 if (res.status === 200) {
                     this.setState(await res.json())
                 } else {
