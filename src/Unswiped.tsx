@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
-
-type User = {
-    username: string,
-    latitude: number,
-    longitude: number,
-}
+import { User } from './App'
+import styles from './Unswiped.module.css'
 
 type UnswipedState = {
     users: Array<User>
@@ -33,12 +29,11 @@ export default class Unswiped extends Component<{}, UnswipedState> {
 
     unswipedUserCard = (user: User) => {
         return (
-            <>
-                <p>{user.username}</p>
-                <p>{user.latitude} {user.longitude}</p>
+            <div className={styles.swipe}>
+                <p>{user.username} {user.lat} {user.long}</p>
                 <button onClick={() => this.registerSwipe(user.username, false)}>would not fight</button>
                 <button onClick={() => this.registerSwipe(user.username, true)}>would fight</button>
-            </>
+            </div>
         )
     }
 
@@ -64,9 +59,9 @@ export default class Unswiped extends Component<{}, UnswipedState> {
 
     render = () => {
         return (
-            <>
+            <div className={styles.body}>
                 {this.state.users.length > 0 && this.unswipedUserCard(this.state.users[0])}
-            </>
+            </div>
         )
     }
 }

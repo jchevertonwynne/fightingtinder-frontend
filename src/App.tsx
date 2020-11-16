@@ -1,16 +1,24 @@
 import React, { Component } from 'react';
 import LoggedIn from './LoggedIn';
 import LoginForm from './Login';
+import styles from './App.module.css'
+
+export type User = {
+    username: string,
+    lat: number,
+    long: number,
+    bio: string,
+}
 
 type AppState = {
-    username: string,
+    user?: User
 }
 
 export default class App extends Component<{}, AppState> {
     constructor(props: {}) {
         super(props)
         this.state = {
-            username: '',
+            user: undefined
         }
     }
 
@@ -22,7 +30,7 @@ export default class App extends Component<{}, AppState> {
         try {
             let res = await fetch("/api/user/manage/li")
             if (res.status === 200) {
-                this.setState({username: await res.text()})
+                this.setState({user: await res.json()})
             } else {
                 console.log(await res.text())
             }
@@ -34,7 +42,7 @@ export default class App extends Component<{}, AppState> {
     logout = async () => {
         try {
             await fetch("/api/user/logout")
-            this.setState({username: ''})
+            this.setState({user: undefined})
         } catch (err) {
             console.log(err)
         }
@@ -42,10 +50,11 @@ export default class App extends Component<{}, AppState> {
 
     render = () => {
         return (
-            <>
-                { this.state.username && <LoggedIn username={this.state.username} logOut={this.logout}/>}
-                { !this.state.username && <LoginForm update={this.checkStatus}/>}
-            </>
+            <div className={styles.body}>
+                { this.state.user 
+                    ? <LoggedIn user={this.state.user} logOut={this.logout}/>
+                    : <LoginForm update={this.checkStatus}/>}
+            </div>
         )
     }
 }

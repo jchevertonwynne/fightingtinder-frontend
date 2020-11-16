@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import styles from './Location.module.css'
 
 type LocationState = {
     status: string,
@@ -47,10 +48,10 @@ export default class Location extends Component<{}, LocationState> {
 
     render = () => {
         return (
-            <>
+            <div className={styles.body}>
                 {this.state.lat && <><p> Lat: {this.state.lat} Long: {this.state.long}</p><br/></> }
                 <button onClick={this.checkLocation}>Check Location</button>
-            </>
+            </div>
         )
     }
 }

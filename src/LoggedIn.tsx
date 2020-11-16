@@ -1,8 +1,11 @@
-import React, { Component } from 'react';
-import SearchUsers from './SearchUsers';
-import Unswiped from './Unswiped';
-import Location from './Location';
-import Matches from './Matches';
+import React, { Component } from 'react'
+import SearchUsers from './SearchUsers'
+import Unswiped from './Unswiped'
+import Location from './Location'
+import Matches from './Matches'
+import UpdateProfile from './UpdateProfile'
+import styles from './LoggedIn.module.css'
+import { User } from './App'
 
 export type Match = {
     name: string
@@ -13,7 +16,7 @@ type LoggedInState = {
 }
 
 type LoggedInProps = {
-    username: string,
+    user: User,
     logOut: (click: void) => void
 }
 
@@ -38,14 +41,15 @@ export default class LoggedIn extends Component<LoggedInProps, LoggedInState> {
 
     render = () => {
         return (
-            <>
-                <p>{this.props.username}</p>
+            <div className={styles.body}>
+                <p>{this.props.user.username}</p>
                 <button onClick={() => this.props.logOut()}>Logout</button><br/>
                 <SearchUsers/><br/>
                 <Location/><br/>
                 <Unswiped/><br/>
-                <Matches matches={this.state.matches} setMatches={this.setMatches} removeMatch={this.removeMatch}/>
-            </>
+                <Matches matches={this.state.matches} setMatches={this.setMatches} removeMatch={this.removeMatch}/><br/>
+                <UpdateProfile/>
+            </div>
         )
     }
 }

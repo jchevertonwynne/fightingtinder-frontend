@@ -67,7 +67,7 @@ export default class LoginForm extends Component<LoginProps, LoginState> {
                 <input onChange={change => this.setState({username: change.target.value})}></input><br/>
                 <input type='password' onChange={change => this.setState({password: change.target.value})}></input><br/>
                 <button onClick={this.tryLogin}>Login</button>
-                <button onClick={this.createAccount}>Create Account</button>
+                <button onClick={this.createAccount}>Create Account</button><br/>
             </>
         )
     }
