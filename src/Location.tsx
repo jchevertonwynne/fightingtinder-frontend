@@ -1,23 +1,12 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import styles from './Location.module.css'
 
-type LocationState = {
-    status: string,
-    lat: number,
-    long: number,
-}
+export default function Location() {
+    let [status, setStatus] = useState<string>()
+    let [lat, setLat] = useState<number>()
+    let [long, setLong] = useState<number>()
 
-export default class Location extends Component<{}, LocationState> {
-    constructor(props: any) {
-        super(props)
-        this.state = {
-            status: '',
-            lat: 0,
-            long: 0,
-        }
-    }
-
-    checkLocation = () => {
+    const checkLocation = () => {
         navigator.geolocation.getCurrentPosition(
             async pos => {
                 try {
@@ -29,15 +18,17 @@ export default class Location extends Component<{}, LocationState> {
                         body: JSON.stringify({lat: pos.coords.latitude, long: pos.coords.longitude})
                     })
                     if (res.status === 200) {
-                        this.setState({status: 'location updated', lat: pos.coords.latitude, long: pos.coords.longitude})
+                        setStatus('location updated')
+                        setLat(pos.coords.latitude)
+                        setLong(pos.coords.longitude)
                     } else {
-                        this.setState({status: 'error setting location'})
+                        setStatus('error setting location')
                     }
                 } catch (err) {
-                    this.setState({status: err})
+                    setStatus(err)
                 }
             },
-            err => this.setState({status: err.message}),
+            err => setStatus(err.message),
             {
                 timeout: 5000,
                 enableHighAccuracy: true,
@@ -46,12 +37,11 @@ export default class Location extends Component<{}, LocationState> {
         )
     }
 
-    render = () => {
-        return (
-            <div className={styles.body}>
-                {this.state.lat && <><p> Lat: {this.state.lat} Long: {this.state.long}</p><br/></> }
-                <button onClick={this.checkLocation}>Check Location</button>
-            </div>
-        )
-    }
+    return (
+        <div className={styles.body}>
+            {status && <p>{status}</p>}
+            {lat && <><p> Lat: {lat} Long: {long}</p><br/></> }
+            <button onClick={checkLocation}>Check Location</button>
+        </div>
+    )
 }

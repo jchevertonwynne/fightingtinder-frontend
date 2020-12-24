@@ -1,74 +1,57 @@
-import React,  { Component } from "react";
+import React,  { useState } from "react";
 
-type LoginProps = {
-    update: () => void,
-}
+export default function LoginForm({update}: {update: () => Promise<void>}) {
+    let [info, setInfo] = useState<string>()
+    let [username, setUsername] = useState<string>()
+    let [password, setPassword] = useState<string>()
 
-type LoginState = {
-    info: string,
-    username: string,
-    password: string,
-}
-
-export default class LoginForm extends Component<LoginProps, LoginState> {
-    constructor(props: LoginProps) {
-        super(props)
-        this.state = {
-            info: '',
-            username: '',
-            password: ''
-        }
-    }
-
-    tryLogin = async () => {
+    const tryLogin = async () => {
         try {
             let res = await fetch("/api/user/login", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({username: this.state.username, password: this.state.password})
+                body: JSON.stringify({username, password})
             })
             if (res.status === 200) {
-                this.props.update()
+                update()
             } else {
-                this.setState({info: await res.text()})
+                setInfo(await res.text())
             }
         
         } catch (err) {
-            this.setState({info: err})
+            setInfo(err)
         }
     }
 
-    createAccount = async () => {
+    const createAccount = async () => {
         try {
             let res = await fetch("/api/user", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({username: this.state.username, password: this.state.password})
+                body: JSON.stringify({username, password})
             })
             if (res.status === 200) {
-                this.props.update()
+                update()
             } else {
-                this.setState({info: await res.text()})
+                setInfo(await res.text())
             }
         } catch (err) {
-            console.log(err)
+            console.error(err)
         }
     }
 
-    render = () => {
-        return (
-            <>
-                <p>Login</p>
-                <p>{this.state.info}</p>
-                <input onChange={change => this.setState({username: change.target.value})}></input><br/>
-                <input type='password' onChange={change => this.setState({password: change.target.value})}></input><br/>
-                <button onClick={this.tryLogin}>Login</button>
-                <button onClick={this.createAccount}>Create Account</button><br/>
-            </>
-        )
-    }
+    return (
+        <>
+            <p>Login</p>
+            <p>{info}</p>
+            <input onChange={change => setUsername(change.target.value)}></input><br/>
+            <input type='password' onChange={change => setPassword(change.target.value)}></input><br/>
+            <button onClick={tryLogin}>Login</button>
+            <button onClick={createAccount}>Create Account</button><br/>
+        </>
+    )
 }
