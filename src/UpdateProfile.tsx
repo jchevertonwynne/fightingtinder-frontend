@@ -8,7 +8,7 @@ export default function UpdateProfile(user: User) {
 
     const save = async () => {
         try {
-            let res = await fetch('/api/user/manage/bio', {
+            const res = await fetch('/api/user/manage/bio', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -20,7 +20,6 @@ export default function UpdateProfile(user: User) {
                 setError(undefined)
             } else {
                 setError(`failed to update bio:${await res.text()}`)
-
             }
         } catch (err) {
             console.error(err)
@@ -34,11 +33,8 @@ export default function UpdateProfile(user: User) {
         try {
             const formdata = new FormData();
             formdata.append('file', profilePic)
-            let res = await fetch('/api/user/manage/profile_pic', {
+            const res = await fetch('/api/user/manage/profile_pic', {
                 method: 'POST',
-                // headers: {
-                //     'Content-Type': 'multipart/form-data',
-                // },
                 body: formdata
             })
             if (res.status === 200) {
@@ -53,7 +49,7 @@ export default function UpdateProfile(user: User) {
     }
 
     const updateProfilePic = (e: React.ChangeEvent<HTMLInputElement>) => {
-        let f = e.target.files
+        const f = e.target.files
         if (!f || f.length === 0) {
             return
         }
