@@ -34,7 +34,7 @@ export default function Matches(m: MatchProps) {
     useEffect(() => {
         const call = async () => {
             try {
-                let res = await fetch("/api/swipe/matches")
+                let res = await fetch("/api/match")
                 if (res.status !== 200) {
                     console.log(await res.text())
                     return
